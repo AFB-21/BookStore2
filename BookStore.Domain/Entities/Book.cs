@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BookStore.Domain.Entities
+{
+     public class Book
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Title { get; set; } = null!;
+        public string? Description { get; set; }
+        public DateTime PuplishedOn { get; set; }
+        public decimal Price { get; set; }
+
+        // FK relationships
+        public Guid AuthorId { get; set; }
+        public Author? Author { get; set; }
+
+        public Guid CategoryId { get; set; }
+        public Category? Category { get; set; }
+    }
+}
