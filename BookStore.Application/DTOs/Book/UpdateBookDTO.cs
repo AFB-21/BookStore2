@@ -8,6 +8,7 @@ namespace BookStore.Application.DTOs.Book
 {
     public class UpdateBookDTO
     {
+        public Guid Id { get; set; }
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
         public DateTime PublishedOn { get; set; }

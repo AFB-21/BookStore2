@@ -33,5 +33,38 @@ namespace BookStore.Api.Controllers
             if (result == null) return NotFound();
             return Ok(result);
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetBooksPaginated(
+        //    [FromQuery] int page = 1,
+        //    [FromQuery] int pageSize = 10,
+        //    [FromQuery] string? filter = null,
+        //    [FromQuery] string? sortBy = null,
+        //    [FromQuery] bool desc = false
+        //    )
+        //{
+        //    var query = new GetBooksQuery(page, pageSize, filter, sortBy, desc);
+        //    var result = await _mediator.Send(query);
+        //    return Ok(result);
+        //}
+
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateBookDTO request)
+        //{
+        //    if (id != request.Id)
+        //        return BadRequest();
+
+        //    await _mediator.Send(new UpdateBookCommand { Book = request });
+
+        //    return Ok(new { message = "BookUpdated" });
+        //}
+
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteBook(Guid id)
+        //{
+        //    await _mediator.Send(new DeleteBookCommand { Id = id });
+
+        //    return Ok(new { message = "BookDeleted" });
+        //}
     }
 }
