@@ -18,15 +18,15 @@ namespace BookStore.Api.Controllers
             _mediator = mediator;
         }
         [HttpPost]
-        [Authorize(Roles ="Admin,Author")]
+        //[Authorize(Roles ="Admin,Author")]
         public async Task<IActionResult> Create([FromBody] CreateBookDTO dto)
         {
             var result = await _mediator.Send(new CreateBookCommand(dto));
-            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(Get), new {id=result.Id},result);
         }
 
         [HttpGet("{id:guid}")]
-        [AllowAnonymous]
+        //[Authorize(Roles = "Admin,Author")]
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await _mediator.Send(new GetBookQuery(id));

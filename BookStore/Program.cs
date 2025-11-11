@@ -11,7 +11,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -42,6 +44,10 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<MappingProfile>(); // أو جميع الـ Profiles كما تريد
+});
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
@@ -57,6 +63,13 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secret = jwtSettings["Key"];
+
+// Validate secret presence/strength at startup
+if (string.IsNullOrWhiteSpace(secret) || Encoding.UTF8.GetByteCount(secret) < 32)
+{
+    throw new System.InvalidOperationException("JWT key is missing or too short. Provide a key at least 32 characters long in configuration.");
+}
+
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!));
 
 builder.Services.AddAuthentication(options =>
@@ -66,6 +79,9 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    // Enforce HTTPS metadata, save token and remove default clock skew for strict expiry checks
+    options.RequireHttpsMetadata = true;
+    options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -75,15 +91,18 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = key,
         ValidateLifetime = true,
+        ClockSkew = System.TimeSpan.Zero
     };
 });
 
-builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+//builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateBookCommand).Assembly));
 builder.Services.AddValidatorsFromAssemblyContaining<CreateBookCommandValidator>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -93,9 +112,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 

@@ -16,7 +16,9 @@ namespace BookStore.Application.Mapping
         public MappingProfile()
         {
             CreateMap<Book,BookDTO>().ReverseMap();
-            CreateMap<CreateBookDTO, Book>();
+            CreateMap<CreateBookDTO, Book>()
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src=>src.CategoryId))
+                .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src=>src.AuthorId));
             CreateMap<UpdateBookDTO, Book>();
 
             CreateMap<Author, AuthorDTO>().ReverseMap();
