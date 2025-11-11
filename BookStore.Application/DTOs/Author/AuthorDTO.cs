@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace BookStore.Application.DTOs.Author
 {
-    public record AuthorDTO(Guid Id, string Name, string? Bio);
+    public record AuthorDTO
+    {
+        public Guid Id { get; init; }
+        public string Name { get; init; }
+        public string? Bio { get; init; }
+    }
 
 }

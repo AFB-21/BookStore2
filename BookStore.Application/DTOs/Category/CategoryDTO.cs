@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace BookStore.Application.DTOs.Category
 {
-    public record CategoryDTO(Guid Id, string Name);
-   
+    public record CategoryDTO
+    {
+        public Guid Id { get; init; }
+        public string Name { get; init; }
+
+    }
+
 }
