@@ -18,7 +18,10 @@ namespace BookStore.Infrastructure.Identity
     {
         
            private readonly IConfiguration _config;
-        public JwtTokenService(IConfiguration config) => _config = config;
+        public JwtTokenService(IConfiguration config)
+        {
+            _config = config;
+        }
 
         public Task<string> CreateTokenAsync(AppUser user, IList<string> roles)
         {

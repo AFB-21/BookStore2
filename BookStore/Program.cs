@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,7 +71,7 @@ if (string.IsNullOrWhiteSpace(secret) || Encoding.UTF8.GetByteCount(secret) < 32
     throw new System.InvalidOperationException("JWT key is missing or too short. Provide a key at least 32 characters long in configuration.");
 }
 
-var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!));
+//var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!));
 
 builder.Services.AddAuthentication(options =>
 {
@@ -80,17 +81,18 @@ builder.Services.AddAuthentication(options =>
 .AddJwtBearer(options =>
 {
     // Enforce HTTPS metadata, save token and remove default clock skew for strict expiry checks
-    options.RequireHttpsMetadata = true;
+    options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidIssuer = jwtSettings["Issuer"],
         ValidateAudience = true,
-        ValidAudience = jwtSettings["Audience"],
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = key,
         ValidateLifetime = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!)),
+        RoleClaimType = ClaimTypes.Role,
         ClockSkew = System.TimeSpan.Zero
     };
 });
@@ -113,8 +115,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

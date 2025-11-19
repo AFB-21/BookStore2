@@ -26,7 +26,7 @@ namespace BookStore.Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await _mediator.Send(new GetBookQuery(id));
@@ -48,23 +48,23 @@ namespace BookStore.Api.Controllers
         //    return Ok(result);
         //}
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateBookDTO request)
-        //{
-        //    if (id != request.Id)
-        //        return BadRequest();
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateBookDTO request)
+        {
+            if (id != request.Id)
+                return BadRequest();
 
-        //    await _mediator.Send(new UpdateBookCommand { Book = request });
+            await _mediator.Send(new UpdateBookCommand(id,request));
 
-        //    return Ok(new { message = "BookUpdated" });
-        //}
+            return Ok(new { message = "BookUpdated" });
+        }
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteBook(Guid id)
-        //{
-        //    await _mediator.Send(new DeleteBookCommand { Id = id });
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(Guid id)
+        {
+            await _mediator.Send(new DeleteBookCommand(id));
 
-        //    return Ok(new { message = "BookDeleted" });
-        //}
+            return Ok(new { message = "BookDeleted" });
+        }
     }
 }
