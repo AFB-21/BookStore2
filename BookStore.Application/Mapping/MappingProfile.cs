@@ -19,7 +19,9 @@ namespace BookStore.Application.Mapping
             CreateMap<CreateBookDTO, Book>()
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src=>src.CategoryId))
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src=>src.AuthorId));
-            CreateMap<UpdateBookDTO, Book>();
+            CreateMap<UpdateBookDTO, Book>()
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId));
 
             CreateMap<Author, AuthorDTO>().ReverseMap();
             CreateMap<CreateAuthorDTO, Author>();

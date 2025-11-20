@@ -12,7 +12,7 @@ namespace BookStore.Application.Features.Books.Commands.Validators
     {
         public UpdateBookCommandValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().WithMessage("Book Id is required.");
+            
             RuleFor(x => x.DTO.Title).NotEmpty().MaximumLength(200);
             RuleFor(x => x.DTO.Price).GreaterThanOrEqualTo(0);
             RuleFor(x => x.DTO.AuthorId).NotEmpty();
