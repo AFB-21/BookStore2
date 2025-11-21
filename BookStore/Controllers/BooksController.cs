@@ -34,6 +34,13 @@ namespace BookStore.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _mediator.Send(new GetAllBooksQuery());
+            return Ok(result);
+        }
+
         //[HttpGet]
         //public async Task<IActionResult> GetBooksPaginated(
         //    [FromQuery] int page = 1,
@@ -43,7 +50,7 @@ namespace BookStore.Api.Controllers
         //    [FromQuery] bool desc = false
         //    )
         //{
-        //    var query = new GetBooksQuery(page, pageSize, filter, sortBy, desc);
+        //    var query = new GetAllBookspaginatedQuery(page, pageSize, filter, sortBy, desc);
         //    var result = await _mediator.Send(query);
         //    return Ok(result);
         //}

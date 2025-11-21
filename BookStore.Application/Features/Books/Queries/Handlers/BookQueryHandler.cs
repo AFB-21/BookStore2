@@ -1,0 +1,52 @@
+﻿using AutoMapper;
+using BookStore.Application.DTOs.Book;
+using BookStore.Application.Features.Books.Queries.Models;
+using BookStore.Application.Interfaces;
+using BookStore.Domain.Entities;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BookStore.Application.Features.Books.Queries.Handlers
+{
+    public class BookQueryHandler : IRequestHandler<GetBookQuery, BookDTO?>,
+                                    IRequestHandler<GetAllBooksQuery, List<BookDTO?>>,
+                                    IRequestHandler<GetAllBooksPaginatedQuery, List<BookDTO?>>
+    {
+        private readonly IGenericRepository<Book> _repo;
+        private readonly IMapper _mapper;
+        public BookQueryHandler(IGenericRepository<Book> repo, IMapper mapper)
+        {
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
+        public async Task<BookDTO?> Handle(GetBookQuery request, CancellationToken cancellationToken)
+        {
+            var book = await _repo.GetByIdAsync(request.Id);
+            return book is null ? null : _mapper.Map<BookDTO>(book);
+        }
+
+        public async Task<List<BookDTO?>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            var books = await _repo.GetAllAsync();
+
+            if (books == null)
+                return new List<BookDTO?>();
+
+            var dtoList = _mapper.Map<List<BookDTO>>(books);
+
+            return dtoList?.Cast<BookDTO?>().ToList() ?? new List<BookDTO?>();
+        }
+
+        public Task<List<BookDTO?>> Handle(GetAllBooksPaginatedQuery request, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

@@ -39,6 +39,11 @@ namespace BookStore.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<T>> GetAllAsync() =>
             await _set.ToListAsync();
+        public async Task<IReadOnlyList<T>> GetAllAsyncPaginated()
+        {
+           return await _set.ToListAsync();
+        }
+            
        
 
         public async Task<T?> GetByIdAsync(Guid id) =>
