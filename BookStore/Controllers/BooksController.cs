@@ -18,6 +18,7 @@ namespace BookStore.Api.Controllers
             _mediator = mediator;
         }
         [HttpPost]
+        [Route("create")]
         //[Authorize(Roles = "Admin,Author")]
         public async Task<IActionResult> Create([FromBody] CreateBookDTO dto)
         {
@@ -42,6 +43,7 @@ namespace BookStore.Api.Controllers
         }
 
         //[HttpGet]
+        //[Route("paginated")]
         //public async Task<IActionResult> GetBooksPaginated(
         //    [FromQuery] int page = 1,
         //    [FromQuery] int pageSize = 10,
@@ -58,12 +60,8 @@ namespace BookStore.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateBookDTO request)
         {
-            if (id != request.Id)
-                return BadRequest();
-
-            await _mediator.Send(new UpdateBookCommand(id,request));
-
-            return Ok(new { message = "BookUpdated" });
+            var result = await _mediator.Send(new UpdateBookCommand(id, request));
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]

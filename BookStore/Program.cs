@@ -1,3 +1,4 @@
+using BookStore.Api.Middleware;
 using BookStore.Application.Behaviors;
 using BookStore.Application.Data;
 using BookStore.Application.Features.Books.Commands.Models;
@@ -27,29 +28,45 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    // Add JWT Bearer support in Swagger
+    // JWT Bearer support in Swagger (use Http/bearer for proper OpenAPI semantics)
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        In = ParameterLocation.Header,
-        Description = "Please enter JWT with Bearer prefix",
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your token. Example: \"Bearer eyJhbGci...\""
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
         {
-            new OpenApiSecurityScheme { Reference = new OpenApiReference {
-                Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { }
-        }});
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "bearer",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SecondaryConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<MappingProfile>(); // أو جميع الـ Profiles كما تريد
 });
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
@@ -100,6 +117,7 @@ builder.Services.AddAuthentication(options =>
 //builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateBookCommand).Assembly));
 builder.Services.AddValidatorsFromAssemblyContaining<CreateBookCommandValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateBookCommandValidator>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
@@ -114,12 +132,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
+//seed roles and users
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

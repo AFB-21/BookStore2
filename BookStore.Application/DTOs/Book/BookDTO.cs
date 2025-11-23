@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace BookStore.Application.DTOs.Book
 {
-    public record BookDTO
+    public class BookDTO
     {
-        public Guid Id { get; init; }
-        public string Title { get; init; }
-        public string? Description { get; init; }
-        public DateTime PublishedOn { get; init; }
-        public decimal Price { get; init; }
-        public Guid AuthorId { get; init; }
-        public Guid CategoryId { get; init; }
+        public Guid Id { get; set; }
+        public string Title { get; set; }
+        public string? Description { get; set; }
+        public DateTime PublishedOn { get; set; }
+        public decimal Price { get; set; }
+        public Guid AuthorId { get; set; }
+        public Guid CategoryId { get; set; }
     }
 
 }

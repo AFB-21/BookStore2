@@ -11,7 +11,7 @@ namespace BookStore.Domain.Entities
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
-        public DateTime PuplishedOn { get; set; }
+        public DateTime PublishedOn { get; set; }
         public decimal Price { get; set; }
 
         // FK relationships

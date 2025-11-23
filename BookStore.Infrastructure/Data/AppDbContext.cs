@@ -42,7 +42,7 @@ namespace BookStore.Application.Data
                     Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
                     Title = "Foundation",
                     Description = "A science fiction novel about the fall of the Galactic Empire.",
-                    PuplishedOn = new DateTime(1951, 6, 1),
+                    PublishedOn = new DateTime(1951, 6, 1),
                     Price = 9.99m,
                     AuthorId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                     CategoryId = Guid.Parse("11111111-1111-1111-1111-111111111111")
@@ -52,7 +52,7 @@ namespace BookStore.Application.Data
                     Id = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
                     Title = "Harry Potter and the Sorcerer's Stone",
                     Description = "The first book in the Harry Potter series.",
-                    PuplishedOn = new DateTime(1997, 6, 26),
+                    PublishedOn = new DateTime(1997, 6, 26),
                     Price = 12.99m,
                     AuthorId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
                     CategoryId = Guid.Parse("22222222-2222-2222-2222-222222222222")
@@ -62,7 +62,7 @@ namespace BookStore.Application.Data
                     Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"),
                     Title = "Murder on the Orient Express",
                     Description = "Murder on the Orient Express",
-                    PuplishedOn = new DateTime(1971, 10, 1),
+                    PublishedOn = new DateTime(1971, 10, 1),
                     Price = 15.19m,
                     AuthorId = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                     CategoryId = Guid.Parse("33333333-3333-3333-3333-333333333333")
