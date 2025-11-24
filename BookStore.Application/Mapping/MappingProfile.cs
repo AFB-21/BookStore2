@@ -15,10 +15,14 @@ namespace BookStore.Application.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<Book,BookDTO>().ReverseMap();
+            CreateMap<Book, BookDTO>()
+                //.ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.Author.Name))
+                //.ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Category.Name))
+                .ReverseMap();
+
             CreateMap<CreateBookDTO, Book>()
-                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src=>src.CategoryId))
-                .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src=>src.AuthorId));
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId));
             CreateMap<UpdateBookDTO, Book>()
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId));
@@ -30,7 +34,6 @@ namespace BookStore.Application.Mapping
             CreateMap<Category, CategoryDTO>().ReverseMap();
             CreateMap<CreateCategoryDTO, Category>();
             CreateMap<UpdateCategoryDTO, Category>();
-
         }
     }
 }
