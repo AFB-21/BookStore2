@@ -47,7 +47,7 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
             if (book == null)
                 throw new KeyNotFoundException($"Book with id '{request.Id}' was not found.");
 
-            _mapper.Map(request, book);
+            _mapper.Map(request.DTO, book);
             book.Id = request.Id;
             await _repo.UpdateAsync(book);
             var dto = _mapper.Map<BookDTO>(book);
