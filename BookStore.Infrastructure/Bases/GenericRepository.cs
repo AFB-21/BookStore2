@@ -39,6 +39,17 @@ namespace BookStore.Infrastructure.Bases
 
         public async Task<IReadOnlyList<T>> GetAllAsync() =>
             await _set.ToListAsync();
+
+        public async Task<IReadOnlyList<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _set;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.ToListAsync();
+        }
+
         public async Task<IReadOnlyList<T>> GetAllAsyncPaginated()
         {
            return await _set.ToListAsync();
@@ -48,6 +59,16 @@ namespace BookStore.Infrastructure.Bases
 
         public async Task<T?> GetByIdAsync(Guid id) =>
             await _set.FindAsync(id);
+
+        public async Task<T?> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _set;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+        }
 
         public async Task UpdateAsync(T entity)
         { 
