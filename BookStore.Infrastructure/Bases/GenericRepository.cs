@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BookStore.Infrastructure.Bases
@@ -28,7 +29,10 @@ namespace BookStore.Infrastructure.Bases
 
         public async Task DeleteAsync(Guid id)
         {
-            var entity = await _set.FindAsync(id);
+            var entity = await _set.FindAsync(new object[] { id });
+            if (entity == null)
+                throw new KeyNotFoundException($"Entity with id '{id}' was not found.");
+
             _set.Remove(entity);
             await _db.SaveChangesAsync();
         }
@@ -50,9 +54,26 @@ namespace BookStore.Infrastructure.Bases
             return await query.ToListAsync();
         }
 
-        public async Task<IReadOnlyList<T>> GetAllAsyncPaginated()
+        // Plan / Pseudocode:
+        // 1. Define default pagination parameters (page number, page size). These can be adjusted later
+        //    or replaced by reading configuration or passing parameters to the method.
+        // 2. Build an IQueryable<T> from the DbSet<T>.
+        // 3. Apply AsNoTracking() for read-only performance.
+        // 4. Apply Skip((pageNumber-1) * pageSize) and Take(pageSize) to get one page.
+        // 5. Execute the query with ToListAsync and return the result as IReadOnlyList<T>.
+        // Note: method signature has no parameters, so defaults are applied here to provide pagination.
+        public async Task<IReadOnlyList<T>> GetAllAsyncPaginated(int PageNumber ,int PageSize)
         {
-           return await _set.ToListAsync();
+
+            IQueryable<T> query = _set.AsQueryable();
+
+            var items = await query
+                .AsNoTracking()
+                .Skip((PageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            return items;
         }
             
        

@@ -42,20 +42,18 @@ namespace BookStore.Api.Controllers
             return Ok(result);
         }
 
-        //[HttpGet]
-        //[Route("paginated")]
-        //public async Task<IActionResult> GetBooksPaginated(
-        //    [FromQuery] int page = 1,
-        //    [FromQuery] int pageSize = 10,
-        //    [FromQuery] string? filter = null,
-        //    [FromQuery] string? sortBy = null,
-        //    [FromQuery] bool desc = false
-        //    )
-        //{
-        //    var query = new GetAllBookspaginatedQuery(page, pageSize, filter, sortBy, desc);
-        //    var result = await _mediator.Send(query);
-        //    return Ok(result);
-        //}
+
+        [HttpGet]
+        [Route("paginated")]
+        public async Task<IActionResult> GetBooksPaginated(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10
+            )
+        {
+            var query = new GetAllBooksPaginatedQuery(page, pageSize);
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateBookDTO request)

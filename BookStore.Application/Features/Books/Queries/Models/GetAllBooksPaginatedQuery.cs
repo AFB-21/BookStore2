@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 namespace BookStore.Application.Features.Books.Queries.Models
 {
     public record GetAllBooksPaginatedQuery(
-        int page,
-        int pageSize,
-        string? filter,
-        string? sortBy,
-        bool desc
+        int PageNumber,
+        int PageSize
+        //string? filter,
+        //string? sortBy,
+        //bool desc
         ) : IRequest<List<BookDTO?>>;
     
     

@@ -27,9 +27,7 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
         }
         public async Task<BookDTO> Handle(CreateBookCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await new CreateBookCommandValidator().ValidateAsync(request, cancellationToken);
-            if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
+            // Validation is handled by the registered ValidationBehavior pipeline.
             var book = _mapper.Map<Book>(request.DTO);
             var created = await _repo.AddAsync(book);
             return _mapper.Map<BookDTO>(created);

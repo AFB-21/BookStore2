@@ -13,6 +13,7 @@ namespace BookStore.Application.Interfaces
         Task<T?> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes);
         Task<IReadOnlyList<T>> GetAllAsync();
         Task<IReadOnlyList<T>> GetAllAsync(params Expression<Func<T, object>>[] includes);
+        Task<IReadOnlyList<T>> GetAllAsyncPaginated(int PageNumber, int PageSize);
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(Guid id);

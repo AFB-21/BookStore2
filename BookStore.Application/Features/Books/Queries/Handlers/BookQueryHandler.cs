@@ -44,9 +44,26 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
             return dtoList?.Cast<BookDTO?>().ToList() ?? new List<BookDTO?>();
         }
 
-        public Task<List<BookDTO?>> Handle(GetAllBooksPaginatedQuery request, CancellationToken cancellationToken)
+        public async Task<List<BookDTO?>> Handle(GetAllBooksPaginatedQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            // Assume request exposes PageNumber and PageSize. Normalize inputs.
+            var pageNumber = request.PageNumber < 1 ? 1 : request.PageNumber;
+            var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
+
+            var books = await _repo.GetAllAsyncPaginated(pageNumber,pageSize);
+
+            if (books == null || !books.Any())
+                return new List<BookDTO?>();
+
+            //var skip = (pageNumber - 1) * pageSize;
+            //var paged = books.Skip(skip).Take(pageSize).ToList();
+
+            var dtoList = _mapper.Map<List<BookDTO>>(books);
+
+            return dtoList?.Cast<BookDTO?>().ToList() ?? new List<BookDTO?>();
         }
     }
 }
