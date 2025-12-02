@@ -25,7 +25,7 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
         }
         public async Task<BookDTO?> Handle(GetBookQuery request, CancellationToken cancellationToken)
         {
-            var book = await _repo.GetByIdAsync(request.Id);
+            var book = await _repo.GetByIdAsync(request.Id, b => b.Author, b => b.Category);
             return book is null ? null : _mapper.Map<BookDTO>(book);
         }
 
@@ -34,7 +34,7 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            var books = await _repo.GetAllAsync();
+            var books = await _repo.GetAllAsync(b => b.Author, b => b.Category);
 
             if (books == null)
                 return new List<BookDTO?>();
@@ -53,7 +53,7 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
             var pageNumber = request.PageNumber < 1 ? 1 : request.PageNumber;
             var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
 
-            var books = await _repo.GetAllAsyncPaginated(pageNumber,pageSize);
+            var books = await _repo.GetAllAsyncPaginated(pageNumber,pageSize, b => b.Author, b => b.Category);
 
             if (books == null || !books.Any())
                 return new List<BookDTO?>();

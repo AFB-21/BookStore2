@@ -119,6 +119,15 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Creat
 builder.Services.AddValidatorsFromAssemblyContaining<CreateBookCommandValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateBookCommandValidator>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -135,6 +144,7 @@ app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("AllowReactApp");
 
 app.MapControllers();
 

@@ -75,6 +75,24 @@ namespace BookStore.Infrastructure.Bases
 
             return items;
         }
+
+        public async Task<IReadOnlyList<T>> GetAllAsyncPaginated(int PageNumber, int PageSize, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _set.AsQueryable();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            var items = await query
+                .AsNoTracking()
+                .Skip((PageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            return items;
+        }
             
        
 
