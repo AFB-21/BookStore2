@@ -15,6 +15,7 @@ namespace BookStore.Application.Mapping
     {
         public MappingProfile()
         {
+            //Book Mappings
             CreateMap<Book, BookDTO>()
                 .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
@@ -29,10 +30,12 @@ namespace BookStore.Application.Mapping
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId));
 
+            //Author Mappings
             CreateMap<Author, AuthorDTO>().ReverseMap();
             CreateMap<CreateAuthorDTO, Author>();
             CreateMap<UpdateAuthorDTO, Author>();
 
+            //Category Mappings
             CreateMap<Category, CategoryDTO>().ReverseMap();
             CreateMap<CreateCategoryDTO, Category>();
             CreateMap<UpdateCategoryDTO, Category>();

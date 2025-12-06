@@ -45,7 +45,7 @@ namespace BookStore.Api.Controllers
 
         [HttpGet]
         [Route("paginated")]
-        public async Task<IActionResult> GetBooksPaginated(
+        public async Task<IActionResult> GetAllsPaginated(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10
             )
@@ -56,14 +56,14 @@ namespace BookStore.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateBookDTO request)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBookDTO request)
         {
             var result = await _mediator.Send(new UpdateBookCommand(id, request));
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             await _mediator.Send(new DeleteBookCommand(id));
 
