@@ -1,6 +1,7 @@
 using BookStore.Api.Middleware;
 using BookStore.Application.Behaviors;
 using BookStore.Application.Data;
+using BookStore.Application.Features.Authors.Queries.Validators;
 using BookStore.Application.Features.Books.Commands.Models;
 using BookStore.Application.Features.Books.Commands.Validators;
 using BookStore.Application.Interfaces;
@@ -59,7 +60,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SecondaryConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(cfg =>
 {
@@ -118,6 +119,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateBookCommand).Assembly));
 builder.Services.AddValidatorsFromAssemblyContaining<CreateBookCommandValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateBookCommandValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<GetAuthorQueryValidators>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddCors(options =>
 {

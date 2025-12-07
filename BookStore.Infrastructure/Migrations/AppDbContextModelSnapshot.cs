@@ -79,7 +79,7 @@ namespace BookStore.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("PuplishedOn")
+                    b.Property<DateTime>("PublishedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
@@ -103,7 +103,7 @@ namespace BookStore.Infrastructure.Migrations
                             CategoryId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "A science fiction novel about the fall of the Galactic Empire.",
                             Price = 9.99m,
-                            PuplishedOn = new DateTime(1951, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishedOn = new DateTime(1951, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Foundation"
                         },
                         new
@@ -113,7 +113,7 @@ namespace BookStore.Infrastructure.Migrations
                             CategoryId = new Guid("22222222-2222-2222-2222-222222222222"),
                             Description = "The first book in the Harry Potter series.",
                             Price = 12.99m,
-                            PuplishedOn = new DateTime(1997, 6, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishedOn = new DateTime(1997, 6, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Harry Potter and the Sorcerer's Stone"
                         },
                         new
@@ -123,7 +123,7 @@ namespace BookStore.Infrastructure.Migrations
                             CategoryId = new Guid("33333333-3333-3333-3333-333333333333"),
                             Description = "Murder on the Orient Express",
                             Price = 15.19m,
-                            PuplishedOn = new DateTime(1971, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishedOn = new DateTime(1971, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Murder on the Orient Express"
                         });
                 });

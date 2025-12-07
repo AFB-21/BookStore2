@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace BookStore.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initalmigration : Migration
+    public partial class IntialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -188,7 +190,7 @@ namespace BookStore.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PuplishedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PublishedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -208,6 +210,36 @@ namespace BookStore.Infrastructure.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Authors",
+                columns: new[] { "Id", "Bio", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), "Prolific science fiction author.", "Isaac Asimov" },
+                    { new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), "Author of the Harry Potter series.", "J.K. Rowling" },
+                    { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), "Famous mystery novelist.", "Agatha Christie" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("11111111-1111-1111-1111-111111111111"), "Science Fiction" },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), "Fantasy" },
+                    { new Guid("33333333-3333-3333-3333-333333333333"), "Mystery" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Books",
+                columns: new[] { "Id", "AuthorId", "CategoryId", "Description", "Price", "PublishedOn", "Title" },
+                values: new object[,]
+                {
+                    { new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"), new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), new Guid("11111111-1111-1111-1111-111111111111"), "A science fiction novel about the fall of the Galactic Empire.", 9.99m, new DateTime(1951, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Foundation" },
+                    { new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), new Guid("22222222-2222-2222-2222-222222222222"), "The first book in the Harry Potter series.", 12.99m, new DateTime(1997, 6, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), "Harry Potter and the Sorcerer's Stone" },
+                    { new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"), new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), new Guid("33333333-3333-3333-3333-333333333333"), "Murder on the Orient Express", 15.19m, new DateTime(1971, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Murder on the Orient Express" }
                 });
 
             migrationBuilder.CreateIndex(

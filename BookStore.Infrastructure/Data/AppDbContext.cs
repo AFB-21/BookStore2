@@ -22,8 +22,8 @@ namespace BookStore.Application.Data
         {
             base.OnModelCreating(builder);
             builder.Entity<Book>().Property(b => b.Title).IsRequired().HasMaxLength(200);
-            // ensure PublishedOn maps to the existing column name in the DB (misspelled in migrations)
-            builder.Entity<Book>().Property(b => b.PublishedOn).HasColumnName("PuplishedOn").HasColumnType("datetime2");
+            // map PublishedOn to the existing misspelled column name in the DB (created by earlier migrations)
+            //builder.Entity<Book>().Property(b => b.PublishedOn).HasColumnName("PublishedOn").HasColumnType("datetime2");
             builder.Entity<Author>().Property(b => b.Name).IsRequired().HasMaxLength(150);
             builder.Entity<Category>().Property(b => b.Name).IsRequired().HasMaxLength(200);
 

@@ -1,8 +1,6 @@
-﻿using System;
+﻿using BookStore.Application.DTOs.Book;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStore.Application.DTOs.Author
 {
@@ -11,6 +9,8 @@ namespace BookStore.Application.DTOs.Author
         public Guid Id { get; init; }
         public string Name { get; init; }
         public string? Bio { get; init; }
-    }
 
+        // Include author's books in the DTO
+        public List<BookDTO> Books { get; init; } = new List<BookDTO>();
+    }
 }
