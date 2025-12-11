@@ -18,13 +18,4 @@
     <ProjectReference Include="..\BookStore.Domain\BookStore.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Categories\Commands\Handlers\" />
-    <Folder Include="Features\Categories\Commands\Models\" />
-    <Folder Include="Features\Categories\Commands\Validators\" />
-    <Folder Include="Features\Categories\Queries\Handlers\" />
-    <Folder Include="Features\Categories\Queries\Models\" />
-    <Folder Include="Features\Categories\Queries\Validators\" />
-  </ItemGroup>
-
 </Project>

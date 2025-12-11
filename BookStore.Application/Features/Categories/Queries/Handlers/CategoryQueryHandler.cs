@@ -1,0 +1,39 @@
+﻿using AutoMapper;
+using BookStore.Application.DTOs.Category;
+using BookStore.Application.Features.Categories.Queries.Models;
+using BookStore.Application.Interfaces;
+using BookStore.Domain.Entities;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BookStore.Application.Features.Categories.Queries.Handlers
+{
+    public class CategoryQueryHandler : IRequestHandler<GetCategoryQuery, CategoryDTO?>,
+                                        IRequestHandler<GetAllCategoriesQuery, List<CategoryDTO?>>
+    {
+        private readonly IGenericRepository<Category> _repo;
+        private readonly IMapper _mapper;
+        public CategoryQueryHandler(IGenericRepository<Category> repo, IMapper mapper)
+        {
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
+        public async Task<CategoryDTO?> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
+        {
+            var category = await _repo.GetByIdAsync(request.Id);
+            return category is null ? null : _mapper.Map<CategoryDTO?>(category);
+        }
+
+        public async Task<List<CategoryDTO?>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
+        {
+            var categories = await _repo.GetAllAsync();
+            if (categories is null || !categories.Any())
+                return new List<CategoryDTO?>();
+            return _mapper.Map<List<CategoryDTO?>>(categories);
+        }
+    }
+}
