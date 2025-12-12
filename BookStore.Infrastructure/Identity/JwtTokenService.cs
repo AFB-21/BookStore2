@@ -1,12 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStore.Infrastructure.Identity
 {
@@ -16,8 +12,8 @@ namespace BookStore.Infrastructure.Identity
     }
     public class JwtTokenService : IJwtTokenService
     {
-        
-           private readonly IConfiguration _config;
+
+        private readonly IConfiguration _config;
         public JwtTokenService(IConfiguration config)
         {
             _config = config;
@@ -52,5 +48,5 @@ namespace BookStore.Infrastructure.Identity
             return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
         }
     }
-    }
+}
 

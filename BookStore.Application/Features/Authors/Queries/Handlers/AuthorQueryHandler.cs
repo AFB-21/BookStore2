@@ -4,11 +4,6 @@ using BookStore.Application.Features.Authors.Queries.Models;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BookStore.Application.Features.Authors.Queries.Handlers
 {

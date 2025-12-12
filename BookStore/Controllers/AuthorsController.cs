@@ -2,7 +2,6 @@
 using BookStore.Application.Features.Authors.Commands.Models;
 using BookStore.Application.Features.Authors.Queries.Models;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorStore.Api.Controllers
@@ -12,12 +11,13 @@ namespace AuthorStore.Api.Controllers
     public class AuthorsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public AuthorsController(IMediator mediator)  
+        public AuthorsController(IMediator mediator)
         {
             _mediator = mediator;
         }
         [HttpPost]
         [Route("create")]
+        [ProducesResponseType(typeof(AuthorDTO), StatusCodes.Status201Created)]
         //[Authorize(Roles = "Admin,Author")]
         public async Task<IActionResult> Create([FromBody] CreateAuthorDTO dto)
         {

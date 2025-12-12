@@ -1,14 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStore.Application.Behaviors
 {
-    public class ValidationBehavior<TRequest,TResponse>:IPipelineBehavior<TRequest,TResponse>
+    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
         public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;

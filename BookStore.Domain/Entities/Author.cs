@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BookStore.Domain.Entities
+﻿namespace BookStore.Domain.Entities
 {
     public class Author
     {
@@ -12,6 +6,6 @@ namespace BookStore.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public string? Bio { get; set; }
 
-        public ICollection<Book> Books { get; set; }= new List<Book>();
+        public ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

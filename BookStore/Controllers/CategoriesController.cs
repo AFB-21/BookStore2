@@ -1,11 +1,7 @@
-﻿using BookStore.Application.DTOs.Book;
-using BookStore.Application.DTOs.Category;
-using BookStore.Application.Features.Books.Commands.Models;
-using BookStore.Application.Features.Books.Queries.Models;
+﻿using BookStore.Application.DTOs.Category;
 using BookStore.Application.Features.Categories.Commands.Models;
 using BookStore.Application.Features.Categories.Queries.Models;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controllers
@@ -14,15 +10,16 @@ namespace BookStore.Api.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-       
-            private readonly IMediator _mediator;
-            public CategoriesController(IMediator mediator)
-            {
-                _mediator = mediator;
-            }
+
+        private readonly IMediator _mediator;
+        public CategoriesController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         [HttpPost]
         [Route("create")]
+        [ProducesResponseType(typeof(CategoryDTO), StatusCodes.Status201Created)]
         //[Authorize(Roles = "Admin,Author")]
         public async Task<IActionResult> Create([FromBody] CreateCategoryDTO dto)
         {
@@ -34,7 +31,7 @@ namespace BookStore.Api.Controllers
         //[Authorize]
         public async Task<IActionResult> Get(Guid id)
         {
-            
+
             var result = await _mediator.Send(new GetCategoryQuery(id));
             if (result == null) return NotFound();
             return Ok(result);

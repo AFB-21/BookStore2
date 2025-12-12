@@ -1,6 +1,4 @@
 ﻿using BookStore.Application.DTOs.Book;
-using System;
-using System.Collections.Generic;
 
 namespace BookStore.Application.DTOs.Author
 {

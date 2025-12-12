@@ -4,11 +4,6 @@ using BookStore.Application.Features.Books.Queries.Models;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStore.Application.Features.Books.Queries.Handlers
 {
@@ -53,7 +48,7 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
             var pageNumber = request.PageNumber < 1 ? 1 : request.PageNumber;
             var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
 
-            var books = await _repo.GetAllAsyncPaginated(pageNumber,pageSize, b => b.Author, b => b.Category);
+            var books = await _repo.GetAllAsyncPaginated(pageNumber, pageSize, b => b.Author, b => b.Category);
 
             if (books == null || !books.Any())
                 return new List<BookDTO?>();

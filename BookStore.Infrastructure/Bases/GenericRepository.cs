@@ -1,13 +1,7 @@
 ﻿using BookStore.Application.Data;
 using BookStore.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BookStore.Infrastructure.Bases
 {
@@ -18,7 +12,7 @@ namespace BookStore.Infrastructure.Bases
         public GenericRepository(AppDbContext db)
         {
             _db = db;
-            _set =db.Set<T>();
+            _set = db.Set<T>();
         }
         public async Task<T> AddAsync(T entity)
         {
@@ -36,10 +30,10 @@ namespace BookStore.Infrastructure.Bases
             _set.Remove(entity);
             await _db.SaveChangesAsync();
         }
-           
+
         public async Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate) =>
             await _set.Where(predicate).ToListAsync();
-                
+
 
         public async Task<IReadOnlyList<T>> GetAllAsync() =>
             await _set.ToListAsync();
@@ -62,7 +56,7 @@ namespace BookStore.Infrastructure.Bases
         // 4. Apply Skip((pageNumber-1) * pageSize) and Take(pageSize) to get one page.
         // 5. Execute the query with ToListAsync and return the result as IReadOnlyList<T>.
         // Note: method signature has no parameters, so defaults are applied here to provide pagination.
-        public async Task<IReadOnlyList<T>> GetAllAsyncPaginated(int PageNumber ,int PageSize)
+        public async Task<IReadOnlyList<T>> GetAllAsyncPaginated(int PageNumber, int PageSize)
         {
 
             IQueryable<T> query = _set.AsQueryable();
@@ -93,8 +87,8 @@ namespace BookStore.Infrastructure.Bases
 
             return items;
         }
-            
-       
+
+
 
         public async Task<T?> GetByIdAsync(Guid id) =>
             await _set.FindAsync(id);
@@ -110,9 +104,9 @@ namespace BookStore.Infrastructure.Bases
         }
 
         public async Task UpdateAsync(T entity)
-        { 
-             _set.Update(entity);
+        {
+            _set.Update(entity);
             await _db.SaveChangesAsync();
-}
+        }
     }
 }

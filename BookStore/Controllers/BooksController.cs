@@ -2,8 +2,6 @@
 using BookStore.Application.Features.Books.Commands.Models;
 using BookStore.Application.Features.Books.Queries.Models;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controllers
@@ -19,11 +17,12 @@ namespace BookStore.Api.Controllers
         }
         [HttpPost]
         [Route("create")]
+        [ProducesResponseType(typeof(BookDTO), StatusCodes.Status201Created)]
         //[Authorize(Roles = "Admin,Author")]
         public async Task<IActionResult> Create([FromBody] CreateBookDTO dto)
         {
             var result = await _mediator.Send(new CreateBookCommand(dto));
-            return CreatedAtAction(nameof(Get), new {id=result.Id},result);
+            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
         }
 
         [HttpGet("{id:guid}")]

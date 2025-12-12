@@ -3,15 +3,10 @@ using BookStore.Application.DTOs.Author;
 using BookStore.Application.DTOs.Book;
 using BookStore.Application.DTOs.Category;
 using BookStore.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStore.Application.Mapping
 {
-    public class MappingProfile:Profile
+    public class MappingProfile : Profile
     {
         public MappingProfile()
         {

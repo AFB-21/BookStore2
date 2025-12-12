@@ -1,16 +1,9 @@
 ﻿using AutoMapper;
 using BookStore.Application.DTOs.Book;
 using BookStore.Application.Features.Books.Commands.Models;
-using BookStore.Application.Features.Books.Commands.Validators;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using FluentValidation;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStore.Application.Features.Books.Commands.Handlers
 {
