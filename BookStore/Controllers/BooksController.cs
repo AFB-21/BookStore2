@@ -8,7 +8,7 @@ namespace BookStore.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class BooksController : ApiControllerBase
     {
         private readonly IMediator _mediator;
         public BooksController(IMediator mediator)
