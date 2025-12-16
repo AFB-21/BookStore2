@@ -22,7 +22,7 @@ namespace AuthorStore.Api.Controllers
         public async Task<IActionResult> Create([FromBody] CreateAuthorDTO dto)
         {
             var result = await _mediator.Send(new CreateAuthorCommand(dto));
-            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(Get), new { id = result }, result);
         }
 
         [HttpGet("{id:guid}")]

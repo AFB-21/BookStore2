@@ -1,6 +1,7 @@
 ﻿using BookStore.Application.DTOs.Book;
 using BookStore.Application.Features.Books.Commands.Models;
 using BookStore.Application.Features.Books.Queries.Models;
+using BookStore.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -99,7 +100,7 @@ namespace BookStore.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _mediator.Send(new DeleteBookCommand(id));
+            var result = await _mediator.Send(new DeleteBookCommand(id));
             if (result.IsFailure)
             {
                 return result.Error.Code switch

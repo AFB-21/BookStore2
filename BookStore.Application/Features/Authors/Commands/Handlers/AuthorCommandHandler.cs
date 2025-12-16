@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using BookStore.Application.Common;
 using BookStore.Application.DTOs.Author;
 using BookStore.Application.Features.Authors.Commands.Models;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace BookStore.Application.Features.Authors.Commands.Handlers
 {
@@ -13,10 +15,12 @@ namespace BookStore.Application.Features.Authors.Commands.Handlers
     {
         private readonly IGenericRepository<Author> _repo;
         private readonly IMapper _mapper;
-        public AuthorCommandHandler(IGenericRepository<Author> repo, IMapper mapper)
+        private readonly ILogger<AuthorCommandHandler> _logger;
+        public AuthorCommandHandler(IGenericRepository<Author> repo, IMapper mapper, ILogger<AuthorCommandHandler> logger)
         {
             _repo = repo;
             _mapper = mapper;
+            _logger = logger;
         }
         public async Task<Result<AuthorDTO>> Handle(CreateAuthorCommand request, CancellationToken cancellationToken)
         {
