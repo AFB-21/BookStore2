@@ -3,6 +3,6 @@ using MediatR;
 
 namespace BookStore.Application.Features.Books.Commands.Models
 {
-    public record UpdateBookCommand(Guid Id, UpdateBookDTO DTO) : IRequest<BookDTO>;
+    public record UpdateBookCommand(Guid Id, UpdateBookDTO DTO) : IRequest<Result<BookDTO>>;
 
 }

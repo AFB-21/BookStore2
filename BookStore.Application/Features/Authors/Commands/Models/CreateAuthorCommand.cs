@@ -3,6 +3,6 @@ using MediatR;
 
 namespace BookStore.Application.Features.Authors.Commands.Models
 {
-    public record CreateAuthorCommand(CreateAuthorDTO DTO) : IRequest<AuthorDTO>;
+    public record CreateAuthorCommand(CreateAuthorDTO DTO) : IRequest<Result<AuthorDTO>>;
 
 }

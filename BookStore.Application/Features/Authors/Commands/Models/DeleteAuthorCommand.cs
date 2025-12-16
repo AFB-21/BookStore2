@@ -3,5 +3,5 @@ using MediatR;
 
 namespace BookStore.Application.Features.Authors.Commands.Models
 {
-    public record DeleteAuthorCommand(Guid Id) : IRequest<AuthorDTO>;
+    public record DeleteAuthorCommand(Guid Id) : IRequest<Result<AuthorDTO>>;
 }

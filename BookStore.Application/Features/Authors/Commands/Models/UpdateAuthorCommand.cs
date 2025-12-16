@@ -3,5 +3,5 @@ using MediatR;
 
 namespace BookStore.Application.Features.Authors.Commands.Models
 {
-    public record UpdateAuthorCommand(Guid Id, UpdateAuthorDTO DTO) : IRequest<AuthorDTO>;
+    public record UpdateAuthorCommand(Guid Id, UpdateAuthorDTO DTO) : IRequest<Result<AuthorDTO>>;
 }

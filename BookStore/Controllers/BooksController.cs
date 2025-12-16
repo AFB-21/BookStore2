@@ -18,23 +18,40 @@ namespace BookStore.Api.Controllers
         [HttpPost]
         [Route("create")]
         [ProducesResponseType(typeof(BookDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         //[Authorize(Roles = "Admin,Author")]
         public async Task<IActionResult> Create([FromBody] CreateBookDTO dto)
         {
             var result = await _mediator.Send(new CreateBookCommand(dto));
-            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+            if(result.IsFailure){
+                return result.Error.Code switch
+                {
+                    "Error.NotFound" => NotFound(new { error = result.Error.Message }),
+                    "Error.Validation" => BadRequest(new { error = result.Error.Message }),
+                    _ => BadRequest(new { error = result.Error.Message })
+                };
+            }
+            return CreatedAtAction(nameof(Get), new { id = result.Value.Id }, result.Value);
         }
 
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(BookDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         //[Authorize]
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await _mediator.Send(new GetBookQuery(id));
-            if (result == null) return NotFound();
+            if (result == null)
+                return NotFound(new { error = $"Book with id '{id}' was not found." });
             return Ok(result);
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<BookDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllBooksQuery());
@@ -44,6 +61,9 @@ namespace BookStore.Api.Controllers
 
         [HttpGet]
         [Route("paginated")]
+        [ProducesResponseType(typeof(List<BookDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllsPaginated(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10
@@ -55,18 +75,40 @@ namespace BookStore.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(BookDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBookDTO request)
         {
             var result = await _mediator.Send(new UpdateBookCommand(id, request));
-            return Ok(result);
+            if (result.IsFailure)
+            {
+                return result.Error.Code switch
+                {
+                    "Error.NotFound" => NotFound(new { error = result.Error.Message }),
+                    "Error.Validation" => BadRequest(new { error = result.Error.Message }),
+                    _ => BadRequest(new { error = result.Error.Message })
+                };
+            }
+            return Ok(result.Value);
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _mediator.Send(new DeleteBookCommand(id));
-
-            return Ok(new { message = "BookDeleted" });
+            if (result.IsFailure)
+            {
+                return result.Error.Code switch
+                {
+                    "Error.NotFound" => NotFound(new { error = result.Error.Message }),
+                    _ => BadRequest(new { error = result.Error.Message })
+                };
+            }
+            return Ok(new { message = "Book deleted successfully", book = result.Value });
         }
     }
 }

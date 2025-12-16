@@ -3,5 +3,5 @@ using MediatR;
 
 namespace BookStore.Application.Features.Books.Commands.Models
 {
-    public record CreateBookCommand(CreateBookDTO DTO) : IRequest<BookDTO>;
+    public record CreateBookCommand(CreateBookDTO DTO) : IRequest<Result<BookDTO>>;
 }
