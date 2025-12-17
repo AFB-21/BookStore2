@@ -53,16 +53,6 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
 
         public async Task<Result<BookDTO>> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
         {
-            // var book = await _repo.GetByIdAsync(request.Id);
-
-            // if (book == null)
-            //     throw new KeyNotFoundException($"Book with id '{request.Id}' was not found.");
-
-            // _mapper.Map(request.DTO, book);
-            // book.Id = request.Id;
-            // await _repo.UpdateAsync(book);
-            // var dto = _mapper.Map<BookDTO>(book);
-            // return dto;
             _logger.LogInformation("Updating book with ID: {BookId}", request.Id);
 
             var book = await _repo.GetByIdAsync(request.Id);
@@ -100,17 +90,6 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
 
         public async Task<Result<BookDTO>> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
         {
-            // if (request == null)
-            //     throw new ArgumentNullException(nameof(request));
-
-            // var book = await _repo.GetByIdAsync(request.Id);
-
-            // if (book == null)
-            //     return null;
-
-            // var resultDto = _mapper.Map<BookDTO>(book);
-            // await _repo.DeleteAsync(book.Id);
-            // return resultDto;
              if (request == null)
             {
                 _logger.LogError("DeleteBookCommand is null");

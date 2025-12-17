@@ -12,27 +12,30 @@ namespace BookStore.Api.Controllers
     public class BooksController : ApiControllerBase
     {
         private readonly IMediator _mediator;
+
         public BooksController(IMediator mediator)
         {
             _mediator = mediator;
         }
+
+        //[Authorize(Roles = "Admin,Author")]
         [HttpPost]
         [Route("create")]
         [ProducesResponseType(typeof(BookDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        //[Authorize(Roles = "Admin,Author")]
         public async Task<IActionResult> Create([FromBody] CreateBookDTO dto)
         {
             var result = await _mediator.Send(new CreateBookCommand(dto));
-            if(result.IsFailure){
+            if (result.IsFailure)
+            {
                 return result.Error.Code switch
                 {
                     "Error.NotFound" => NotFound(new { error = result.Error.Message }),
-                    "Error.Validation" => BadRequest(new { error = result.Error.Message }),
                     _ => BadRequest(new { error = result.Error.Message })
                 };
             }
+
             return CreatedAtAction(nameof(Get), new { id = result.Value.Id }, result.Value);
         }
 
@@ -68,7 +71,7 @@ namespace BookStore.Api.Controllers
         public async Task<IActionResult> GetAllsPaginated(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10
-            )
+        )
         {
             var query = new GetAllBooksPaginatedQuery(page, pageSize);
             var result = await _mediator.Send(query);
@@ -87,10 +90,10 @@ namespace BookStore.Api.Controllers
                 return result.Error.Code switch
                 {
                     "Error.NotFound" => NotFound(new { error = result.Error.Message }),
-                    "Error.Validation" => BadRequest(new { error = result.Error.Message }),
                     _ => BadRequest(new { error = result.Error.Message })
                 };
             }
+
             return Ok(result.Value);
         }
 
@@ -109,6 +112,7 @@ namespace BookStore.Api.Controllers
                     _ => BadRequest(new { error = result.Error.Message })
                 };
             }
+
             return Ok(new { message = "Book deleted successfully", book = result.Value });
         }
     }

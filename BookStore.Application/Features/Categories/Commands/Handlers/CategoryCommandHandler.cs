@@ -22,9 +22,15 @@ namespace BookStore.Application.Features.Categories.Commands.Handlers
         }
         public async Task<Result<CategoryDTO>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Creating category with name: {CategoryName}", request.DTO.Name);
+            if (request == null)
+            {
+                _logger.LogError("CreateCategoryCommand is null");
+                return Result<CategoryDTO>.Failure("CreateCategoryCommand is null");
+            }
             var category = _mapper.Map<Category>(request.DTO);
             var createdCategory = await _repo.AddAsync(category);
-            return _mapper.Map<CategoryDTO>(createdCategory);
+            return Result<CategoryDTO>.Success(_mapper.Map<CategoryDTO>(createdCategory));
 
         }
 

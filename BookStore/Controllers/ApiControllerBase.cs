@@ -19,28 +19,30 @@ namespace BookStore.Controllers
                 {
                     "Error.NotFound" => NotFound(new { error = result.Error.Message }),
                     "Error.Validation" => BadRequest(new { error = result.Error.Message }),
-"Error.Unauthorized" => Unauthorized(new { error = result.Error.Message }),
-"Error.Forbidden" => Forbid(),
-"Error.Conflict" => Conflict(new { error = result.Error.Message }),
+                    "Error.Unauthorized" => Unauthorized(new { error = result.Error.Message }),
+                    "Error.Forbidden" => Forbid(),
+                    "Error.Conflict" => Conflict(new { error = result.Error.Message }),
                     _ => BadRequest(new { error = result.Error.Message })
                 };
             }
+
             return Ok(result.Value);
         }
+
         protected IActionResult HandleResult(Result result)
         {
-        if (result.IsSuccess)
-            return Ok();
+            if (result.IsSuccess)
+                return Ok();
 
-        return result.Error.Code switch
+            return result.Error.Code switch
             {
-            "Error.NotFound" => NotFound(new { error = result.Error.Message }),
-            "Error.Validation" => BadRequest(new { error = result.Error.Message }),
-            "Error.Unauthorized" => Unauthorized(new { error = result.Error.Message }),
-            "Error.Forbidden" => Forbid(),
-            "Error.Conflict" => Conflict(new { error = result.Error.Message }),
-            _ => BadRequest(new { error = result.Error.Message })
+                "Error.NotFound" => NotFound(new { error = result.Error.Message }),
+                "Error.Validation" => BadRequest(new { error = result.Error.Message }),
+                "Error.Unauthorized" => Unauthorized(new { error = result.Error.Message }),
+                "Error.Forbidden" => Forbid(),
+                "Error.Conflict" => Conflict(new { error = result.Error.Message }),
+                _ => BadRequest(new { error = result.Error.Message })
             };
         }
-}
+    }
 }
