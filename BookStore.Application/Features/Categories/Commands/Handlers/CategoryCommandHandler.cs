@@ -7,18 +7,20 @@ using MediatR;
 
 namespace BookStore.Application.Features.Categories.Commands.Handlers
 {
-    public class CategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryDTO>,
-                                        IRequestHandler<UpdateCategoryCommand, CategoryDTO>,
-                                        IRequestHandler<DeleteCategoryCommand, CategoryDTO>
+    public class CategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Result<CategoryDTO>>,
+                                        IRequestHandler<UpdateCategoryCommand, Result<CategoryDTO>>,
+                                        IRequestHandler<DeleteCategoryCommand, Result<CategoryDTO>>
     {
         private readonly IGenericRepository<Category> _repo;
         private readonly IMapper _mapper;
-        public CategoryCommandHandler(IGenericRepository<Category> repo, IMapper mapper)
+        private readonly ILogger<CategoryCommandHandler> _logger;
+        public CategoryCommandHandler(IGenericRepository<Category> repo, IMapper mapper, ILogger<CategoryCommandHandler> logger)
         {
             _repo = repo;
             _mapper = mapper;
+            _logger = logger;
         }
-        public async Task<CategoryDTO> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryDTO>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = _mapper.Map<Category>(request.DTO);
             var createdCategory = await _repo.AddAsync(category);
@@ -26,7 +28,7 @@ namespace BookStore.Application.Features.Categories.Commands.Handlers
 
         }
 
-        public async Task<CategoryDTO> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryDTO>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = await _repo.GetByIdAsync(request.Id);
             if (category == null)
@@ -38,7 +40,7 @@ namespace BookStore.Application.Features.Categories.Commands.Handlers
             return updatedCategory;
         }
 
-        public async Task<CategoryDTO> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CategoryDTO>> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = await _repo.GetByIdAsync(request.Id);
             if (category == null)
