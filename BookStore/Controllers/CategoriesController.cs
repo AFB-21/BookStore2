@@ -36,7 +36,7 @@ namespace BookStore.Api.Controllers
                 };
             }
 
-            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(Get), new { id = result.Value.Id }, result);
         }
 
         //[Authorize]

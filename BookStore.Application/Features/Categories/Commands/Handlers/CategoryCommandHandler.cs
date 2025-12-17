@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using BookStore.Application.Common;
 using BookStore.Application.DTOs.Category;
 using BookStore.Application.Features.Categories.Commands.Models;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace BookStore.Application.Features.Categories.Commands.Handlers
 {
@@ -26,7 +28,7 @@ namespace BookStore.Application.Features.Categories.Commands.Handlers
             if (request == null)
             {
                 _logger.LogError("CreateCategoryCommand is null");
-                return Result<CategoryDTO>.Failure("CreateCategoryCommand is null");
+                return Result<CategoryDTO>.Forbidden();
             }
             var category = _mapper.Map<Category>(request.DTO);
             var createdCategory = await _repo.AddAsync(category);
@@ -38,7 +40,7 @@ namespace BookStore.Application.Features.Categories.Commands.Handlers
         {
             var category = await _repo.GetByIdAsync(request.Id);
             if (category == null)
-                return null;
+                return Result<CategoryDTO>.NotFound("not found",request.Id);
             _mapper.Map(request.DTO, category);
             category.Id = request.Id;
             await _repo.UpdateAsync(category);
@@ -50,7 +52,7 @@ namespace BookStore.Application.Features.Categories.Commands.Handlers
         {
             var category = await _repo.GetByIdAsync(request.Id);
             if (category == null)
-                return null;
+                return Result<CategoryDTO>.NotFound("not found", request.Id);
             var deletedCategory = _mapper.Map<CategoryDTO>(category);
             await _repo.DeleteAsync(category.Id);
             return deletedCategory;
