@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using BookStore.Application.Common;
 using BookStore.Application.DTOs.Book;
 using BookStore.Application.Features.Books.Queries.Models;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace BookStore.Application.Features.Books.Queries.Handlers
 {
@@ -13,10 +15,12 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
     {
         private readonly IGenericRepository<Book> _repo;
         private readonly IMapper _mapper;
-        public BookQueryHandler(IGenericRepository<Book> repo, IMapper mapper)
+        private readonly ILogger<BookQueryHandler> _logger;
+        public BookQueryHandler(IGenericRepository<Book> repo, IMapper mapper, ILogger<BookQueryHandler> logger)
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _logger = logger;
         }
         public async Task<BookDTO?> Handle(GetBookQuery request, CancellationToken cancellationToken)
         {
@@ -47,18 +51,25 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
             // Assume request exposes PageNumber and PageSize. Normalize inputs.
             var pageNumber = request.PageNumber < 1 ? 1 : request.PageNumber;
             var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
+            _logger.LogInformation("Getting paginated books. Page: {Page}, Size: {Size}",
+            pageNumber, pageSize);
+            var (books,totalCount) = await _repo.GetPagedAsync(
+                pageNumber,
+                pageSize,
+                b => b.Author,
+                b => b.Category
+                );
 
-            var books = await _repo.GetAllAsyncPaginated(pageNumber, pageSize, b => b.Author, b => b.Category);
+            _logger.LogInformation("Retrieved {Count} books (Total: {Total}) for page {Page}",
+              books.Count, totalCount, pageNumber);
 
             if (books == null || !books.Any())
-                return new List<BookDTO?>();
+                return PagedResult<BookDTO>.Empty(pageNumber, pageSize);
 
-            //var skip = (pageNumber - 1) * pageSize;
-            //var paged = books.Skip(skip).Take(pageSize).ToList();
 
             var dtoList = _mapper.Map<List<BookDTO>>(books);
 
-            return dtoList?.Cast<BookDTO?>().ToList() ?? new List<BookDTO?>();
+            return new PagedResult<BookDTO>(dtoList, totalCount, pageNumber, pageSize);
         }
     }
 }

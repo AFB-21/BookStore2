@@ -1,4 +1,5 @@
-﻿using BookStore.Application.DTOs.Book;
+﻿using BookStore.Application.Common;
+using BookStore.Application.DTOs.Book;
 using MediatR;
 
 namespace BookStore.Application.Features.Books.Queries.Models
@@ -9,7 +10,7 @@ namespace BookStore.Application.Features.Books.Queries.Models
         //string? filter,
         //string? sortBy,
         //bool desc
-        ) : IRequest<List<BookDTO?>>;
+        ) : IRequest<PagedResult<BookDTO?>>;
 
 
 }

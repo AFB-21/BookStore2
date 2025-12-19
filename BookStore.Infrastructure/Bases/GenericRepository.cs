@@ -48,45 +48,38 @@ namespace BookStore.Infrastructure.Bases
             return await query.ToListAsync();
         }
 
-        // Plan / Pseudocode:
-        // 1. Define default pagination parameters (page number, page size). These can be adjusted later
-        //    or replaced by reading configuration or passing parameters to the method.
-        // 2. Build an IQueryable<T> from the DbSet<T>.
-        // 3. Apply AsNoTracking() for read-only performance.
-        // 4. Apply Skip((pageNumber-1) * pageSize) and Take(pageSize) to get one page.
-        // 5. Execute the query with ToListAsync and return the result as IReadOnlyList<T>.
-        // Note: method signature has no parameters, so defaults are applied here to provide pagination.
-        public async Task<IReadOnlyList<T>> GetAllAsyncPaginated(int PageNumber, int PageSize)
-        {
 
-            IQueryable<T> query = _set.AsQueryable();
+        //public async Task<IReadOnlyList<T>> GetAllAsyncPaginated(int PageNumber, int PageSize)
+        //{
 
-            var items = await query
-                .AsNoTracking()
-                .Skip((PageNumber - 1) * PageSize)
-                .Take(PageSize)
-                .ToListAsync();
+        //    IQueryable<T> query = _set.AsQueryable();
 
-            return items;
-        }
+        //    var items = await query
+        //        .AsNoTracking()
+        //        .Skip((PageNumber - 1) * PageSize)
+        //        .Take(PageSize)
+        //        .ToListAsync();
 
-        public async Task<IReadOnlyList<T>> GetAllAsyncPaginated(int PageNumber, int PageSize, params Expression<Func<T, object>>[] includes)
-        {
-            IQueryable<T> query = _set.AsQueryable();
+        //    return items;
+        //}
 
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
+        //public async Task<IReadOnlyList<T>> GetAllAsyncPaginated(int PageNumber, int PageSize, params Expression<Func<T, object>>[] includes)
+        //{
+        //    IQueryable<T> query = _set.AsQueryable();
 
-            var items = await query
-                .AsNoTracking()
-                .Skip((PageNumber - 1) * PageSize)
-                .Take(PageSize)
-                .ToListAsync();
+        //    foreach (var include in includes)
+        //    {
+        //        query = query.Include(include);
+        //    }
 
-            return items;
-        }
+        //    var items = await query
+        //        .AsNoTracking()
+        //        .Skip((PageNumber - 1) * PageSize)
+        //        .Take(PageSize)
+        //        .ToListAsync();
+
+        //    return items;
+        //}
 
 
 
@@ -101,6 +94,35 @@ namespace BookStore.Infrastructure.Bases
                 query = query.Include(include);
             }
             return await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+        }
+
+        public async Task<(IReadOnlyList<T> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize)
+        {
+            var query = _set.AsQueryable();
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .AsNoTracking()
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (items, totalCount);
+        }
+
+        public async Task<(IReadOnlyList<T> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _set;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            var totalCount = await query.CountAsync();
+            var items = await query
+               .AsNoTracking()
+               .Skip((pageNumber - 1) * pageSize)
+               .Take(pageSize)
+               .ToListAsync();
+
+            return (items, totalCount);
         }
 
         public async Task UpdateAsync(T entity)
