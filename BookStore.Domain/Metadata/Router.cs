@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BookStore.Domain.Metadata
+﻿namespace BookStore.Domain.Metadata
 {
     public static class Router
     {

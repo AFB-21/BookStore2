@@ -3,6 +3,7 @@ using BookStore.Application.Common;
 using BookStore.Application.DTOs.Book;
 using BookStore.Application.Features.Books.Queries.Models;
 using BookStore.Application.Interfaces;
+using BookStore.Application.Specifications;
 using BookStore.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -51,23 +52,24 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
             // Assume request exposes PageNumber and PageSize. Normalize inputs.
             var pageNumber = request.PageNumber < 1 ? 1 : request.PageNumber;
             var pageSize = request.PageSize < 1 ? 10 : request.PageSize;
-            _logger.LogInformation("Getting paginated books. Page: {Page}, Size: {Size}",
-            pageNumber, pageSize);
-            var (books,totalCount) = await _repo.GetPagedAsync(
-                pageNumber,
-                pageSize,
-                b => b.Author,
-                b => b.Category
-                );
+            _logger.LogInformation(
+                "Getting paginated books. Page: {Page}, Size: {Size}, Search: {Search}, Sort: {Sort}",
+                    pageNumber, pageSize, request.SearchTerm, request.SortBy);
+            // Create specification
+            var filterParams = request.ToFilterParams();
+            var spec = new BookSpecification(filterParams);
 
-            _logger.LogInformation("Retrieved {Count} books (Total: {Total}) for page {Page}",
-              books.Count, totalCount, pageNumber);
+            // Get paged results using specification
+            var (items, totalCount) = await _repo.GetPagedWithSpecAsync(spec);
 
-            if (books == null || !books.Any())
+            _logger.LogInformation(
+                "Retrieved {Count} books (Total: {Total}) for page {Page}",
+                items.Count, totalCount, pageNumber);
+
+            if (items == null || !items.Any())
                 return PagedResult<BookDTO>.Empty(pageNumber, pageSize);
 
-
-            var dtoList = _mapper.Map<List<BookDTO>>(books);
+            var dtoList = _mapper.Map<List<BookDTO>>(items);
 
             return new PagedResult<BookDTO>(dtoList, totalCount, pageNumber, pageSize);
         }

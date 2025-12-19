@@ -40,7 +40,7 @@ namespace BookStore.Application.Features.Categories.Commands.Handlers
         {
             var category = await _repo.GetByIdAsync(request.Id);
             if (category == null)
-                return Result<CategoryDTO>.NotFound("not found",request.Id);
+                return Result<CategoryDTO>.NotFound("not found", request.Id);
             _mapper.Map(request.DTO, category);
             category.Id = request.Id;
             await _repo.UpdateAsync(category);

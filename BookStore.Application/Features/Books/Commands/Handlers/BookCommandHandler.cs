@@ -30,7 +30,7 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
         {
             _logger.LogInformation("creating book: {title}", request.DTO.Title);
             var author = await _authorRepo.GetByIdAsync(request.DTO.AuthorId);
-            if(author == null)
+            if (author == null)
             {
                 _logger.LogWarning("author not found: {authorId}", request.DTO.AuthorId);
                 return Result<BookDTO>.NotFound("Author", request.DTO.AuthorId);
@@ -46,7 +46,7 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
             var book = _mapper.Map<Book>(request.DTO);
             var createdBook = await _repo.AddAsync(book);
             _logger.LogInformation("Book created with ID: {BookId}", createdBook.Id);
-            var bookDto= _mapper.Map<BookDTO>(createdBook);
+            var bookDto = _mapper.Map<BookDTO>(createdBook);
             return Result<BookDTO>.Success(bookDto);
 
         }
@@ -90,14 +90,14 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
 
         public async Task<Result<BookDTO>> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
         {
-             if (request == null)
+            if (request == null)
             {
                 _logger.LogError("DeleteBookCommand is null");
                 return Result<BookDTO>.Validation("Delete command cannot be null.");
             }
 
             _logger.LogInformation("Deleting book with ID: {BookId}", request.Id);
-           
+
             var book = await _repo.GetByIdAsync(request.Id);
             if (book == null)
             {

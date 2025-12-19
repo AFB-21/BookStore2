@@ -1,5 +1,6 @@
 ﻿using BookStore.Application.Data;
 using BookStore.Application.Interfaces;
+using BookStore.Application.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -19,6 +20,19 @@ namespace BookStore.Infrastructure.Bases
             await _set.AddAsync(entity);
             await _db.SaveChangesAsync();
             return entity;
+        }
+
+        public async Task<int> CountAsync(ISpecification<T> spec)
+        {
+            // Create query with criteria but without paging
+            var query = _set.AsQueryable();
+
+            if (spec.Criteria != null)
+            {
+                query = query.Where(spec.Criteria);
+            }
+
+            return await query.CountAsync();
         }
 
         public async Task DeleteAsync(Guid id)
@@ -46,6 +60,11 @@ namespace BookStore.Infrastructure.Bases
                 query = query.Include(include);
             }
             return await query.ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).ToListAsync();
         }
 
 
@@ -125,6 +144,21 @@ namespace BookStore.Infrastructure.Bases
             return (items, totalCount);
         }
 
+        public async Task<(IReadOnlyList<T> Items, int TotalCount)> GetPagedWithSpecAsync(ISpecification<T> spec)
+        {
+            // Get total count (without paging)
+            var totalCount = await CountAsync(spec);
+
+            // Get paged items
+            var items = await ApplySpecification(spec).ToListAsync();
+
+            return (items, totalCount);
+        }
+
+        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        {
+            return SpecificationEvaluator<T>.GetQuery(_set.AsQueryable(), spec);
+        }
         public async Task UpdateAsync(T entity)
         {
             _set.Update(entity);

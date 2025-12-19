@@ -72,7 +72,7 @@ try
     builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("SecondaryConnection")));
 
- 
+
     builder.Services.AddAutoMapper(cfg =>
     {
         cfg.AddProfile<MappingProfile>(); // أو جميع الـ Profiles كما تريد

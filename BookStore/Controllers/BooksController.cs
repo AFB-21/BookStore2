@@ -71,10 +71,26 @@ namespace BookStore.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllsPaginated(
             [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? search = null,
+            [FromQuery] decimal? minPrice = null,
+            [FromQuery] decimal? maxPrice = null,
+            [FromQuery] Guid? authorId = null,
+            [FromQuery] Guid? categoryId = null,
+            [FromQuery] string? sortBy = null,
+            [FromQuery] bool desc = false
         )
         {
-            var query = new GetAllBooksPaginatedQuery(page, pageSize);
+            var query = new GetAllBooksPaginatedQuery(
+        page,
+        pageSize,
+        search,
+        minPrice,
+        maxPrice,
+        authorId,
+        categoryId,
+        sortBy,
+        desc);
             var result = await _mediator.Send(query);
             return Ok(result);
         }

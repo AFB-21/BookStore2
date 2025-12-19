@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using BookStore.Application.Specifications;
+using System.Linq.Expressions;
 
 namespace BookStore.Application.Interfaces
 {
@@ -18,6 +19,10 @@ namespace BookStore.Application.Interfaces
             int pageNumber,
             int pageSize,
             params Expression<Func<T, object>>[] includes);
+
+        Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec);
+        Task<int> CountAsync(ISpecification<T> spec);
+        Task<(IReadOnlyList<T> Items, int TotalCount)> GetPagedWithSpecAsync(ISpecification<T> spec);
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(Guid id);
