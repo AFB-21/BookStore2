@@ -1,12 +1,13 @@
 ﻿using BookStore.Application.Data;
 using BookStore.Application.Interfaces;
 using BookStore.Application.Specifications;
+using BookStore.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace BookStore.Infrastructure.Bases
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class:BaseEntity
     {
         private readonly AppDbContext _db;
         private readonly DbSet<T> _set;
@@ -37,12 +38,7 @@ namespace BookStore.Infrastructure.Bases
 
         public async Task DeleteAsync(Guid id)
         {
-            var entity = await _set.FindAsync(new object[] { id });
-            if (entity == null)
-                throw new KeyNotFoundException($"Entity with id '{id}' was not found.");
-
-            _set.Remove(entity);
-            await _db.SaveChangesAsync();
+            await SoftDeleteAsync(id);
         }
 
         public async Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate) =>
@@ -163,6 +159,59 @@ namespace BookStore.Infrastructure.Bases
         {
             _set.Update(entity);
             await _db.SaveChangesAsync();
+        }
+
+        public async Task SoftDeleteAsync(Guid id)
+        {
+            var entity = await _set.FindAsync(id);
+            if (entity == null)
+                throw new KeyNotFoundException($"Entity with id '{id}' was not found.");
+
+            // EF will automatically handle this through SaveChanges override
+            _set.Remove(entity);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task HardDeleteAsync(Guid id)
+        {
+            var entity = await _set.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (entity == null)
+                throw new KeyNotFoundException($"Entity with id '{id}' was not found.");
+
+            // Force hard delete
+            _db.Entry(entity).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task RestoreAsync(Guid id)
+        {
+            var entity = await _set.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (entity == null)
+                throw new KeyNotFoundException($"Entity with id '{id}' was not found.");
+
+            if (!entity.IsDeleted)
+                throw new InvalidOperationException($"Entity with id '{id}' is not deleted.");
+
+            entity.IsDeleted = false;
+            entity.DeletedAt = null;
+            entity.DeletedBy = null;
+
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<T?> GetByIdIncludeDeletedAsync(Guid id)
+        {
+            return await _set.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task<IReadOnlyList<T>> GetAllIncludeDeletedAsync()
+        {
+            return await _set.IgnoreQueryFilters().ToListAsync();
         }
     }
 }

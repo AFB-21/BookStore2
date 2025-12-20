@@ -27,5 +27,18 @@ namespace BookStore.Application.Interfaces
         Task UpdateAsync(T entity);
         Task DeleteAsync(Guid id);
         Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate);
+
+        // Soft delete
+        Task SoftDeleteAsync(Guid id);
+
+        // Hard delete (use with caution!)
+        Task HardDeleteAsync(Guid id);
+
+        // Restore soft deleted item
+        Task RestoreAsync(Guid id);
+
+        // Get including soft deleted items
+        Task<T?> GetByIdIncludeDeletedAsync(Guid id);
+        Task<IReadOnlyList<T>> GetAllIncludeDeletedAsync();
     }
 }

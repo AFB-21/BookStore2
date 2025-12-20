@@ -11,7 +11,9 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
 {
     public class BookCommandHandler : IRequestHandler<CreateBookCommand, Result<BookDTO>>,
                                         IRequestHandler<UpdateBookCommand, Result<BookDTO>>,
-                                        IRequestHandler<DeleteBookCommand, Result<BookDTO>>
+                                        IRequestHandler<DeleteBookCommand, Result<BookDTO>>,
+                                        IRequestHandler<RestoreBookCommand, Result<BookSummaryDTO>>,
+                                        IRequestHandler<HardDeleteBookCommand, Result<BookDTO>>
     {
         private readonly IGenericRepository<Book> _repo;
         private readonly IGenericRepository<Author> _authorRepo;
@@ -111,6 +113,41 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
 
             var dto = _mapper.Map<BookDTO>(book);
             return Result<BookDTO>.Success(dto);
+        }
+
+        public async Task<Result<BookSummaryDTO>> Handle(RestoreBookCommand request, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Restoring book: {BookId}", request.Id);
+
+            try
+            {
+                await _repo.RestoreAsync(request.Id);
+                return Result<BookSummaryDTO>.Success( "Book restored successfully" );
+            }
+            catch (KeyNotFoundException)
+            {
+                return Result<BookSummaryDTO>.NotFound(new { error = $"Book with id '{request.Id}' was not found." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Result<BookSummaryDTO>.Failure(new { error = ex.Message});
+            }
+        }
+
+        public async Task<Result<BookDTO>> Handle(HardDeleteBookCommand request, CancellationToken cancellationToken)
+        {
+            _logger.LogWarning("HARD deleting book: {BookId}", request.Id);
+
+            try
+            {
+                await _repo.HardDeleteAsync(request.Id);
+                return Result<BookDTO>.Success(new { message = "Book permanently deleted" });
+            }
+            catch (KeyNotFoundException)
+            {
+                return Result<BookDTO>.NotFound("Book Id", request.Id);
+            });
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace BookStore.Domain.Entities
+﻿using BookStore.Domain.Common;
+
+namespace BookStore.Domain.Entities
 {
-    public class Book
+    public class Book:BaseEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; } = null!;

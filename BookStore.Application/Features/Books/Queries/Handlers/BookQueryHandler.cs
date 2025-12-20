@@ -12,7 +12,8 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
 {
     public class BookQueryHandler : IRequestHandler<GetBookQuery, BookDTO?>,
                                     IRequestHandler<GetAllBooksQuery, List<BookSummaryDTO?>>,
-                                    IRequestHandler<GetAllBooksPaginatedQuery, PagedResult<BookSummaryDTO>>
+                                    IRequestHandler<GetAllBooksPaginatedQuery, PagedResult<BookSummaryDTO>>,
+                                    IRequestHandler<GetDeletedBooksQuery, List<BookSummaryDTO>>
     {
         private readonly IGenericRepository<Book> _repo;
         private readonly IMapper _mapper;
@@ -72,6 +73,17 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
             var dtoList = _mapper.Map<List<BookSummaryDTO>>(items);
 
             return new PagedResult<BookSummaryDTO>(dtoList, totalCount, pageNumber, pageSize);
+        }
+
+        public async Task<List<BookSummaryDTO>> Handle(GetDeletedBooksQuery request, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Getting soft deleted books");
+
+            var deletedBooks = await _repo.GetAllIncludeDeletedAsync();
+            var books = deletedBooks.Where(b => b.IsDeleted).ToList();
+
+            var dtoList = _mapper.Map<List<BookSummaryDTO>>(books);
+            return dtoList;
         }
     }
 }

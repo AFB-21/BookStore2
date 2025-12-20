@@ -132,5 +132,47 @@ namespace BookStore.Api.Controllers
 
             return Ok(new { message = "Book deleted successfully", book = result.Value });
         }
+
+        [HttpGet("deleted")]
+        [ProducesResponseType(typeof(List<BookSummaryDTO>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetDeletedBooks(Guid id)
+        {
+            var result = await _mediator.Send(new GetDeletedBooksQuery(id));
+            return Ok(result);
+        }
+
+        [HttpPost("{id}/restore")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RestoreBook(Guid id)
+        {
+            var result = await _mediator.Send(new RestoreBookCommand(id));
+            if (result.IsFailure)
+            {
+                return result.Error.Code switch
+                {
+                    "Error.NotFound" => NotFound(new { error = result.Error.Message }),
+                    _ => BadRequest(new { error = result.Error.Message })
+                };
+            }
+            return Ok(new { message = "Book restored successfully", book = result.Value });
+        }
+
+        [HttpDelete("{id}/hard")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> HardDeleteBook(Guid id)
+        {
+            var result = await _mediator.Send(new HardDeleteBookCommand(id));
+            if (result.IsFailure)
+            {
+                return result.Error.Code switch
+                {
+                    "Error.NotFound" => NotFound(new { error = result.Error.Message }),
+                    _ => BadRequest(new { error = result.Error.Message })
+                };
+            }
+            return Ok(new { message = "Book permanently deleted", book = result.Value });
+        }
     }
 }
