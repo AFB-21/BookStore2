@@ -57,7 +57,7 @@ namespace AuthorStore.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<AuthorDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<AuthorSummaryDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()

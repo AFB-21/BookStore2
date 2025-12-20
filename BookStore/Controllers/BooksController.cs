@@ -54,7 +54,7 @@ namespace BookStore.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<BookDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<BookSummaryDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()
@@ -66,7 +66,7 @@ namespace BookStore.Api.Controllers
 
         [HttpGet]
         [Route("paginated")]
-        [ProducesResponseType(typeof(PagedResult<BookDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<BookSummaryDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllsPaginated(

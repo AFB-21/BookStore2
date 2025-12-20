@@ -52,7 +52,7 @@ namespace BookStore.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<CategoryDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<CategorySummaryDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()

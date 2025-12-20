@@ -4,11 +4,11 @@ namespace BookStore.Application.DTOs.Author
 {
     public record AuthorDTO
     {
-        public Guid Id { get; init; }
-        public string Name { get; init; }
-        public string? Bio { get; init; }
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Bio { get; set; }
 
-        // Include author's books in the DTO
-        public List<BookDTO> Books { get; init; } = new List<BookDTO>();
+        // Use BookSummaryDTO instead of BookDTO to break circular reference
+        public List<BookSummaryDTO> Books { get; set; } = new();
     }
 }

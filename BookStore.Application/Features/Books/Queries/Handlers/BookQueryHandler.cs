@@ -11,8 +11,8 @@ using Microsoft.Extensions.Logging;
 namespace BookStore.Application.Features.Books.Queries.Handlers
 {
     public class BookQueryHandler : IRequestHandler<GetBookQuery, BookDTO?>,
-                                    IRequestHandler<GetAllBooksQuery, List<BookDTO?>>,
-                                    IRequestHandler<GetAllBooksPaginatedQuery, List<BookDTO?>>
+                                    IRequestHandler<GetAllBooksQuery, List<BookSummaryDTO?>>,
+                                    IRequestHandler<GetAllBooksPaginatedQuery, PagedResult<BookSummaryDTO>>
     {
         private readonly IGenericRepository<Book> _repo;
         private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
             return book is null ? null : _mapper.Map<BookDTO>(book);
         }
 
-        public async Task<List<BookDTO?>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
+        public async Task<List<BookSummaryDTO?>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -37,14 +37,14 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
             var books = await _repo.GetAllAsync(b => b.Author, b => b.Category);
 
             if (books == null)
-                return new List<BookDTO?>();
+                return new List<BookSummaryDTO?>();
 
-            var dtoList = _mapper.Map<List<BookDTO>>(books);
+            var dtoList = _mapper.Map<List<BookSummaryDTO>>(books);
 
-            return dtoList?.Cast<BookDTO?>().ToList() ?? new List<BookDTO?>();
+            return dtoList?.Cast<BookSummaryDTO?>().ToList() ?? new List<BookSummaryDTO?>();
         }
 
-        public async Task<List<BookDTO?>> Handle(GetAllBooksPaginatedQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResult<BookSummaryDTO>> Handle(GetAllBooksPaginatedQuery request, CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -67,11 +67,11 @@ namespace BookStore.Application.Features.Books.Queries.Handlers
                 items.Count, totalCount, pageNumber);
 
             if (items == null || !items.Any())
-                return PagedResult<BookDTO>.Empty(pageNumber, pageSize);
+                return PagedResult<BookSummaryDTO>.Empty(pageNumber, pageSize);
 
-            var dtoList = _mapper.Map<List<BookDTO>>(items);
+            var dtoList = _mapper.Map<List<BookSummaryDTO>>(items);
 
-            return new PagedResult<BookDTO>(dtoList, totalCount, pageNumber, pageSize);
+            return new PagedResult<BookSummaryDTO>(dtoList, totalCount, pageNumber, pageSize);
         }
     }
 }

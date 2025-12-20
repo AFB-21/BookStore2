@@ -15,7 +15,7 @@ namespace BookStore.Application.Features.Books.Queries.Models
         Guid? CategoryId = null,
         string? SortBy = null,
         bool IsDescending = false
-        ) : IRequest<PagedResult<BookDTO?>>
+        ) : IRequest<PagedResult<BookSummaryDTO>>
     {
         public BookFilterParams ToFilterParams() => new()
         {

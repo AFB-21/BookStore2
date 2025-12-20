@@ -3,6 +3,6 @@ using MediatR;
 
 namespace BookStore.Application.Features.Authors.Queries.Models
 {
-    public record GetAllAuthorsQuery() : IRequest<List<AuthorDTO?>>;
+    public record GetAllAuthorsQuery() : IRequest<List<AuthorSummaryDTO>>;
 
 }

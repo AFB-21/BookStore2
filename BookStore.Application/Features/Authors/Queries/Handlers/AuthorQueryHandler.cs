@@ -8,7 +8,7 @@ using MediatR;
 namespace BookStore.Application.Features.Authors.Queries.Handlers
 {
     public class AuthorQueryHandler : IRequestHandler<GetAuthorQuery, AuthorDTO?>,
-                                    IRequestHandler<GetAllAuthorsQuery, List<AuthorDTO?>>
+                                    IRequestHandler<GetAllAuthorsQuery, List<AuthorSummaryDTO>>
     {
         private readonly IGenericRepository<Author> _repo;
         private readonly IMapper _mapper;
@@ -24,14 +24,14 @@ namespace BookStore.Application.Features.Authors.Queries.Handlers
             return author is null ? null : _mapper.Map<AuthorDTO>(author);
         }
 
-        public async Task<List<AuthorDTO?>> Handle(GetAllAuthorsQuery request, CancellationToken cancellationToken)
+        public async Task<List<AuthorSummaryDTO>> Handle(GetAllAuthorsQuery request, CancellationToken cancellationToken)
         {
             var authors = await _repo.GetAllAsync(a => a.Books);
             if (authors is null || !authors.Any())
             {
-                return new List<AuthorDTO?>();
+                return new List<AuthorSummaryDTO>();
             }
-            return _mapper.Map<List<AuthorDTO?>>(authors);
+            return _mapper.Map<List<AuthorSummaryDTO>>(authors);
         }
     }
 }

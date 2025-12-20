@@ -1,21 +1,17 @@
 ﻿namespace BookStore.Application.DTOs.Book
 {
-    public class BookDTO
+    public class BookSummaryDTO
     {
         public Guid Id { get; set; }
         public string Title { get; set; } = null!;
-        public string? Description { get; set; }
-        public DateTime PublishedOn { get; set; }
         public decimal Price { get; set; }
+        public DateTime PublishedOn { get; set; }
 
-        // Author info - no circular reference
+        // Only IDs and names - no nested objects
         public Guid AuthorId { get; set; }
         public string AuthorName { get; set; } = null!;
-        public string? AuthorBio { get; set; }  // Extra detail for single view
 
-        // Category info - no circular reference
         public Guid CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
-
     }
 }

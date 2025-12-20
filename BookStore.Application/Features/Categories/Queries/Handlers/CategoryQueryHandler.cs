@@ -8,7 +8,7 @@ using MediatR;
 namespace BookStore.Application.Features.Categories.Queries.Handlers
 {
     public class CategoryQueryHandler : IRequestHandler<GetCategoryQuery, CategoryDTO?>,
-                                        IRequestHandler<GetAllCategoriesQuery, List<CategoryDTO?>>
+                                        IRequestHandler<GetAllCategoriesQuery, List<CategorySummaryDTO>>
     {
         private readonly IGenericRepository<Category> _repo;
         private readonly IMapper _mapper;
@@ -23,12 +23,12 @@ namespace BookStore.Application.Features.Categories.Queries.Handlers
             return category is null ? null : _mapper.Map<CategoryDTO?>(category);
         }
 
-        public async Task<List<CategoryDTO?>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
+        public async Task<List<CategorySummaryDTO>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
             var categories = await _repo.GetAllAsync();
             if (categories is null || !categories.Any())
-                return new List<CategoryDTO?>();
-            return _mapper.Map<List<CategoryDTO?>>(categories);
+                return new List<CategorySummaryDTO>();
+            return _mapper.Map<List<CategorySummaryDTO>>(categories);
         }
     }
 }
