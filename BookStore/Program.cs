@@ -6,6 +6,8 @@ using BookStore.Application.Features.Books.Commands.Models;
 using BookStore.Application.Features.Books.Commands.Validators;
 using BookStore.Application.Interfaces;
 using BookStore.Application.Mapping;
+using BookStore.Application.Services;
+using BookStore.Application.Specifications;
 using BookStore.Infrastructure.Bases;
 using BookStore.Infrastructure.Identity;
 using FluentValidation;
@@ -78,7 +80,9 @@ try
         cfg.AddProfile<MappingProfile>(); // أو جميع الـ Profiles كما تريد
     });
     builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-
+    builder.Services.AddHttpContextAccessor();
+    builder.Services.AddScoped<IUserContextService, UserContextService>();
+    builder.Services.AddScoped(typeof(ISpecification<>), typeof(Specification<>));
     builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
     builder.Services.AddIdentity<AppUser, IdentityRole>(options =>

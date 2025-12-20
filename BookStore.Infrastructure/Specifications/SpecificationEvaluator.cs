@@ -1,4 +1,7 @@
-﻿namespace BookStore.Application.Specifications
+using BookStore.Application.Specifications;
+using Microsoft.EntityFrameworkCore;
+
+namespace BookStore.Infrastructure.Specifications
 {
     public static class SpecificationEvaluator<T> where T : class
     {
@@ -24,7 +27,8 @@
             // Apply pagination
             if (specification.IsPagingEnabled)
             {
-                query = query.Skip(specification.Skip).Take(specification.Take);
+                if (specification.Skip.HasValue) query = query.Skip(specification.Skip.Value);
+                if (specification.Take.HasValue) query = query.Take(specification.Take.Value);
             }
             return query;
         }

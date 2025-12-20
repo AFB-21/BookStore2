@@ -2,12 +2,13 @@
 using BookStore.Application.Interfaces;
 using BookStore.Application.Specifications;
 using BookStore.Domain.Common;
+using BookStore.Infrastructure.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace BookStore.Infrastructure.Bases
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class:BaseEntity
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         private readonly AppDbContext _db;
         private readonly DbSet<T> _set;

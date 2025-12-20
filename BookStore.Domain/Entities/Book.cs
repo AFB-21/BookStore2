@@ -2,7 +2,7 @@
 
 namespace BookStore.Domain.Entities
 {
-    public class Book:BaseEntity
+    public class Book : BaseEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; } = null!;

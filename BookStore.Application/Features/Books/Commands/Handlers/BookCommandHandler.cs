@@ -122,15 +122,17 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
             try
             {
                 await _repo.RestoreAsync(request.Id);
-                return Result<BookSummaryDTO>.Success( "Book restored successfully" );
+                var book = await _repo.GetByIdAsync(request.Id);
+                var dto = _mapper.Map<BookSummaryDTO>(book);
+                return Result<BookSummaryDTO>.Success(dto);
             }
             catch (KeyNotFoundException)
             {
-                return Result<BookSummaryDTO>.NotFound(new { error = $"Book with id '{request.Id}' was not found." });
+                return Result<BookSummaryDTO>.NotFound("Book", request.Id);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                return Result<BookSummaryDTO>.Failure(new { error = ex.Message});
+                return Result<BookSummaryDTO>.Failure(new Error("RestoreError", ex.Message));
             }
         }
 
@@ -141,12 +143,15 @@ namespace BookStore.Application.Features.Books.Commands.Handlers
             try
             {
                 await _repo.HardDeleteAsync(request.Id);
-                return Result<BookDTO>.Success(new { message = "Book permanently deleted" });
+                return Result<BookDTO>.Success(null);
             }
             catch (KeyNotFoundException)
             {
                 return Result<BookDTO>.NotFound("Book Id", request.Id);
-            });
+            }
+            catch (Exception ex)
+            {
+                return Result<BookDTO>.Failure(new Error("HardDeleteError", ex.Message));
             }
         }
     }

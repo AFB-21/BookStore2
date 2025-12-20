@@ -10,8 +10,8 @@ namespace BookStore.Application.Data
     public class AppDbContext : IdentityDbContext<AppUser>
     {
         private readonly IUserContextService? _userContextService;
-        public AppDbContext(DbContextOptions<AppDbContext> options, 
-                IUserContextService? userContextService=null) : base(options) 
+        public AppDbContext(DbContextOptions<AppDbContext> options,
+                IUserContextService? userContextService = null) : base(options)
         {
             _userContextService = userContextService;
         }
@@ -51,30 +51,51 @@ namespace BookStore.Application.Data
 
             //seed data
             builder.Entity<Category>().HasData(
-                new Category { Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), Name = "Science Fiction",
+                new Category
+                {
+                    Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    Name = "Science Fiction",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "System"
                 },
-                new Category { Id = Guid.Parse("22222222-2222-2222-2222-222222222222"), Name = "Fantasy",
+                new Category
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                    Name = "Fantasy",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "System"
                 },
-                new Category { Id = Guid.Parse("33333333-3333-3333-3333-333333333333"), Name = "Mystery",
+                new Category
+                {
+                    Id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
+                    Name = "Mystery",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "System"
                 }
-                    
+
             );
             builder.Entity<Author>().HasData(
-                new Author { Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), Name = "Isaac Asimov", Bio = "Prolific science fiction author." ,
+                new Author
+                {
+                    Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                    Name = "Isaac Asimov",
+                    Bio = "Prolific science fiction author.",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "System"
                 },
-                new Author { Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), Name = "J.K. Rowling", Bio = "Author of the Harry Potter series.",
+                new Author
+                {
+                    Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                    Name = "J.K. Rowling",
+                    Bio = "Author of the Harry Potter series.",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "System"
                 },
-                new Author { Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"), Name = "Agatha Christie", Bio = "Famous mystery novelist.",
+                new Author
+                {
+                    Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                    Name = "Agatha Christie",
+                    Bio = "Famous mystery novelist.",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "System"
                 }
