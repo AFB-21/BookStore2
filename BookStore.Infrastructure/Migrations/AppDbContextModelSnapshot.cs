@@ -17,7 +17,7 @@ namespace BookStore.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.21")
+                .HasAnnotation("ProductVersion", "8.0.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -31,10 +31,36 @@ namespace BookStore.Infrastructure.Migrations
                     b.Property<string>("Bio")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -45,18 +71,27 @@ namespace BookStore.Infrastructure.Migrations
                         {
                             Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             Bio = "Prolific science fiction author.",
+                            CreatedAt = new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9112),
+                            CreatedBy = "System",
+                            IsDeleted = false,
                             Name = "Isaac Asimov"
                         },
                         new
                         {
                             Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
                             Bio = "Author of the Harry Potter series.",
+                            CreatedAt = new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9117),
+                            CreatedBy = "System",
+                            IsDeleted = false,
                             Name = "J.K. Rowling"
                         },
                         new
                         {
                             Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                             Bio = "Famous mystery novelist.",
+                            CreatedAt = new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9126),
+                            CreatedBy = "System",
+                            IsDeleted = false,
                             Name = "Agatha Christie"
                         });
                 });
@@ -73,8 +108,23 @@ namespace BookStore.Infrastructure.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -82,10 +132,21 @@ namespace BookStore.Infrastructure.Migrations
                     b.Property<DateTime>("PublishedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -101,7 +162,10 @@ namespace BookStore.Infrastructure.Migrations
                             Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
                             AuthorId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             CategoryId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9161),
+                            CreatedBy = "System",
                             Description = "A science fiction novel about the fall of the Galactic Empire.",
+                            IsDeleted = false,
                             Price = 9.99m,
                             PublishedOn = new DateTime(1951, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Foundation"
@@ -111,7 +175,10 @@ namespace BookStore.Infrastructure.Migrations
                             Id = new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
                             AuthorId = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
                             CategoryId = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CreatedAt = new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9168),
+                            CreatedBy = "System",
                             Description = "The first book in the Harry Potter series.",
+                            IsDeleted = false,
                             Price = 12.99m,
                             PublishedOn = new DateTime(1997, 6, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Harry Potter and the Sorcerer's Stone"
@@ -121,7 +188,10 @@ namespace BookStore.Infrastructure.Migrations
                             Id = new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"),
                             AuthorId = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                             CategoryId = new Guid("33333333-3333-3333-3333-333333333333"),
+                            CreatedAt = new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9174),
+                            CreatedBy = "System",
                             Description = "Murder on the Orient Express",
+                            IsDeleted = false,
                             Price = 15.19m,
                             PublishedOn = new DateTime(1971, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Murder on the Orient Express"
@@ -134,10 +204,36 @@ namespace BookStore.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -147,16 +243,25 @@ namespace BookStore.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(8924),
+                            CreatedBy = "System",
+                            IsDeleted = false,
                             Name = "Science Fiction"
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CreatedAt = new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(8942),
+                            CreatedBy = "System",
+                            IsDeleted = false,
                             Name = "Fantasy"
                         },
                         new
                         {
                             Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            CreatedAt = new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(8946),
+                            CreatedBy = "System",
+                            IsDeleted = false,
                             Name = "Mystery"
                         });
                 });

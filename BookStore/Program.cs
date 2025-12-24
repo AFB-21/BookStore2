@@ -1,5 +1,6 @@
 using BookStore.Api.Middleware;
 using BookStore.Application.Behaviors;
+using Microsoft.Extensions.Hosting;
 using BookStore.Application.Data;
 using BookStore.Application.Features.Authors.Queries.Validators;
 using BookStore.Application.Features.Books.Commands.Models;
@@ -72,7 +73,8 @@ try
     });
 
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("SecondaryConnection")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("SecondaryConnection"),
+        b => b.MigrationsAssembly("BookStore.Infrastructure")));
 
 
     builder.Services.AddAutoMapper(cfg =>
@@ -82,7 +84,7 @@ try
     builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddScoped<IUserContextService, UserContextService>();
-    builder.Services.AddScoped(typeof(ISpecification<>), typeof(Specification<>));
+
     builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
     builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
@@ -235,8 +237,9 @@ try
 
     app.Run();
 }
-catch (Exception ex)
+catch (Exception ex) when (ex is not HostAbortedException)
 {
+    Console.WriteLine("CRITICAL STARTUP ERROR: " + ex.ToString());
     Log.Fatal(ex, "Application failed to start");
 }
 finally

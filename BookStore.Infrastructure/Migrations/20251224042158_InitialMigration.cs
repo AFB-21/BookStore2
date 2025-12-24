@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,7 +8,7 @@
 namespace BookStore.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialMigration : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,7 +58,15 @@ namespace BookStore.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,7 +78,15 @@ namespace BookStore.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -192,7 +209,15 @@ namespace BookStore.Infrastructure.Migrations
                     PublishedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -213,32 +238,32 @@ namespace BookStore.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Authors",
-                columns: new[] { "Id", "Bio", "Name" },
+                columns: new[] { "Id", "Bio", "CreatedAt", "CreatedBy", "DeletedAt", "DeletedBy", "IsDeleted", "Name", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), "Prolific science fiction author.", "Isaac Asimov" },
-                    { new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), "Author of the Harry Potter series.", "J.K. Rowling" },
-                    { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), "Famous mystery novelist.", "Agatha Christie" }
+                    { new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), "Prolific science fiction author.", new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9112), "System", null, null, false, "Isaac Asimov", null, null },
+                    { new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), "Author of the Harry Potter series.", new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9117), "System", null, null, false, "J.K. Rowling", null, null },
+                    { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), "Famous mystery novelist.", new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9126), "System", null, null, false, "Agatha Christie", null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "DeletedBy", "IsDeleted", "Name", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { new Guid("11111111-1111-1111-1111-111111111111"), "Science Fiction" },
-                    { new Guid("22222222-2222-2222-2222-222222222222"), "Fantasy" },
-                    { new Guid("33333333-3333-3333-3333-333333333333"), "Mystery" }
+                    { new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(8924), "System", null, null, false, "Science Fiction", null, null },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(8942), "System", null, null, false, "Fantasy", null, null },
+                    { new Guid("33333333-3333-3333-3333-333333333333"), new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(8946), "System", null, null, false, "Mystery", null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Books",
-                columns: new[] { "Id", "AuthorId", "CategoryId", "Description", "Price", "PublishedOn", "Title" },
+                columns: new[] { "Id", "AuthorId", "CategoryId", "CreatedAt", "CreatedBy", "DeletedAt", "DeletedBy", "Description", "IsDeleted", "Price", "PublishedOn", "Title", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"), new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), new Guid("11111111-1111-1111-1111-111111111111"), "A science fiction novel about the fall of the Galactic Empire.", 9.99m, new DateTime(1951, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Foundation" },
-                    { new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), new Guid("22222222-2222-2222-2222-222222222222"), "The first book in the Harry Potter series.", 12.99m, new DateTime(1997, 6, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), "Harry Potter and the Sorcerer's Stone" },
-                    { new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"), new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), new Guid("33333333-3333-3333-3333-333333333333"), "Murder on the Orient Express", 15.19m, new DateTime(1971, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Murder on the Orient Express" }
+                    { new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"), new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9161), "System", null, null, "A science fiction novel about the fall of the Galactic Empire.", false, 9.99m, new DateTime(1951, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Foundation", null, null },
+                    { new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), new Guid("22222222-2222-2222-2222-222222222222"), new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9168), "System", null, null, "The first book in the Harry Potter series.", false, 12.99m, new DateTime(1997, 6, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), "Harry Potter and the Sorcerer's Stone", null, null },
+                    { new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"), new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), new Guid("33333333-3333-3333-3333-333333333333"), new DateTime(2025, 12, 24, 4, 21, 57, 463, DateTimeKind.Utc).AddTicks(9174), "System", null, null, "Murder on the Orient Express", false, 15.19m, new DateTime(1971, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Murder on the Orient Express", null, null }
                 });
 
             migrationBuilder.CreateIndex(
